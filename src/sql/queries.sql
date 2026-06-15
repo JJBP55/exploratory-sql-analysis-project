@@ -20,33 +20,96 @@ SELECT * FROM species;
 SELECT * FROM climate;
 SELECT * FROM observations;
 
-
+--Nivel 1 – Exploración básica (SELECT, LIMIT, DISTINCT, WHERE)
 -- MISSION 1
--- Your query here;
+SELECT *
+FROM observations
+LIMIT 10;
 
 -- MISSION 2
--- Your query here;
+SELECT DISTINCT region_id
+FROM observations;
 
 
 -- MISSION 3
--- Your query here;
+SELECT COUNT(DISTINCT species_id) AS total_species 
+FROM observations;
 
 
 -- MISSION 4
--- Your query here;
+SELECT *
+FROM observations
+WHERE region_id = 2;
 
 
 -- MISSION 5
--- Your query here;
+SELECT *
+from observations
+WHERE observation_date = '1998-08-08';
 
 
--- MISSION 6
--- Your query here;
+--Nivel 2 – Agregación y ordenamiento (GROUP BY, COUNT, ORDER BY, HAVING sin JOIN)
+-- MISSION 1
+SELECT region_id, COUNT(*) as total_ob
+FROM observations
+GROUP BY region_id
+ORDER BY total_ob desc;
 
 
--- MISSION 7
--- Your query here;
+-- MISSION 2
+SELECT species_id, COUNT(*) AS total
+FROM observations
+GROUP BY species_id
+ORDER BY total DESC
+LIMIT 5;
 
 
--- MISSION 8
--- Your query here;
+-- MISSION 3
+SELECT species_id, COUNT(*) AS total
+FROM observations
+GROUP BY species_id
+HAVING total < 5
+ORDER BY total ASC;
+
+-- MISSION 4
+SELECT observer, COUNT(*) AS total
+FROM observations
+GROUP BY observer
+ORDER BY total DESC;
+
+--Nivel 3 – Relaciones entre tablas (JOIN)
+-- MISSION 1
+SELECT name, region_id
+FROM observations
+JOIN regions
+    on observations.region_id = regions.id;
+
+-- MISSION 2 
+SELECT scientific_name, species_id
+FROM observations
+JOIN species
+    on observations.species_id = species.id;
+
+-- MISSION 3
+SELECT name, scientific_name, COUNT(*) AS total
+FROM observations
+JOIN species ON observations.species_id = species.id
+JOIN regions ON observations.region_id = regions.id
+GROUP BY name, scientific_name
+ORDER BY name, total DESC;  
+
+--Nivel 4 (opcional) – Manipulación de datos
+-- MISSION 1
+INSERT INTO observations
+(species_id, region_id, observer, observation_date, latitude, longitude, count)
+VALUES (2, 2, 'obsr1375321', '2026-06-14', '-33.126945', '151.61362', 1);
+
+--MISSION 2
+UPDATE species
+SET scientific_name = 'Larus hyperboreus'
+WHERE id = 1263;
+-- no encontré como desplegar la tabla completa
+
+--MISSION 3
+DELETE FROM observations
+WHERE id = 125;
